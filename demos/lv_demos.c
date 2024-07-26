@@ -34,6 +34,7 @@ typedef struct  {
 static const demo_entry_info_t demos_entry_info[] = {
 #if LV_USE_DEMO_WIDGETS
     { "widgets", .entry_cb = lv_demo_widgets },
+    { "event", .entry_cb = anim_file_demo },
 #endif
 
 #if LV_USE_DEMO_MUSIC
