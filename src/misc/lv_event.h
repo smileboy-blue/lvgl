@@ -119,7 +119,17 @@ typedef enum {
                                       before the class default event processing */
 } lv_event_code_t;
 
-typedef lv_array_t lv_event_list_t;
+enum {
+    LV_EVENT_FLAG_INIT = 0x00,
+    LV_EVENT_FLAG_TRAVERSING = 0x01,
+    LV_EVENT_FLAG_REMOVED = 0x02,
+};
+typedef uint8_t lv_event_flag_t;
+
+struct _lv_event_list_t {
+    lv_array_t   array;
+    lv_event_flag_t flags;
+};
 
 struct _lv_event_t {
     void * current_target;
@@ -233,6 +243,37 @@ uint32_t lv_event_register_id(void);
  * @param target     pointer to an event target which was deleted
  */
 void _lv_event_mark_deleted(void * target);
+
+
+/**
+ * set a flag in the event list.
+ * @param list pointer to an `lv_event_list_t` variable
+ * @param flag an `lv_event_flag_t` variable
+ */
+static inline void lv_event_add_flag(lv_event_list_t * list, const lv_event_flag_t flag)
+{
+    list->flags |= flag;
+}
+
+/**
+ * remove a flag in the event list.
+ * @param list pointer to an `lv_event_list_t` variable
+ * @param flag an `lv_event_flag_t` variable
+ */
+static inline void lv_event_remove_flag(lv_event_list_t * list, const lv_event_flag_t flag)
+{
+    list->flags &= (~flag);
+}
+
+/**
+ * Is there a certain flag in the event list.
+ * @param list pointer to an `lv_event_list_t` variable
+ * @param flag an `lv_event_flag_t` variable
+ */
+static inline bool lv_event_has_flag(const lv_event_list_t * list, const lv_event_flag_t flag)
+{
+    return (list->flags & flag) != 0;
+}
 
 /**********************
  *      MACROS
